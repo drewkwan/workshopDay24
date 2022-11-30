@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import vttp.workshopDay24.day24Workshop.models.PurchaseOrder;
 import vttp.workshopDay24.day24Workshop.repositories.OrdersRepository;
@@ -14,7 +15,10 @@ public class OrderService {
     @Autowired
     private OrdersRepository ordersRepo;
 
-    public boolean createOrder(PurchaseOrder po) {
+    @Transactional(rollbackFor = OrderException.class)
+    public void createOrder(PurchaseOrder po) throws OrderException {
+
+        //generate the orderId
         String orderId = UUID.randomUUID().toString().substring(0, 8);
 
         po.setId(orderId);
@@ -23,10 +27,15 @@ public class OrderService {
         //create the order
         int count = ordersRepo.createPurchaseOrder(po);
 
+        if (count == 0){
+            throw new OrderException("Exception for irderId %s\n".formatted(orderId));
+
+        }
+
         //create the associated items
         ordersRepo.createOrderDetails(po.getItems(), orderId);
 
-        return count>0;
+    
     }
     
 }

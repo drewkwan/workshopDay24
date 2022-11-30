@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import vttp.workshopDay24.day24Workshop.models.Item;
 import vttp.workshopDay24.day24Workshop.models.PurchaseOrder;
+import vttp.workshopDay24.day24Workshop.services.OrderException;
 import vttp.workshopDay24.day24Workshop.services.OrderService;
 
 @Controller
@@ -27,7 +30,16 @@ public class OrdersController {
 
 
     @PostMapping
-    public String postOrder(@RequestBody MultiValueMap<String, String> form, Model model) throws ParseException {
+    public String postOrder(@RequestBody MultiValueMap<String, String> form, Model model, HttpSession session) throws ParseException, OrderException {
+
+        List<Item> items = (List<Item>) session.getAttribute("order");
+
+        if (items == null) {
+            System.out.println("this is a new session");
+            System.out.printf(" seission id = %s\n", session.getId());
+            items = new LinkedList<>();
+            session.setAttribute("order", items);
+        }
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
 
@@ -37,8 +49,6 @@ public class OrdersController {
         po.setNotes(form.getFirst("notes"));
         po.setTax(Float.parseFloat(form.getFirst("tax")));
         po.setOrderDate(formatter.parse(form.getFirst("date")));
-
-        List<Item> items = new LinkedList<>();
         
         String itemName = form.getFirst("itemName");
         Float price = Float.parseFloat(form.getFirst("itemPrice"));
@@ -52,20 +62,27 @@ public class OrdersController {
         //put in the queries
         orderSvc.createOrder(po);
 
-        if (!orderSvc.createOrder(po)) {
-            String error = "Order couldn't be created :(";
-            model.addAttribute("error", error);
-        } else{
-            String success="Order was created successfully!";
-            model.addAttribute("success", success);
-            model.addAttribute("purchaseOrder", po);
-        }
+        model.addAttribute("items", items);
+        model.addAttribute("purchaseOrder", po);
+        
 
     
 
-        return "/add";
+        return "index_template";
         
         
     }
+
+    @PostMapping(path="/checkout")
+    public String postCheckout(Model model, HttpSession session) {
+        List<Item> items = (List<Item>) session.getAttribute("order");
+
+        session.invalidate();
+        String success="Checkout was successful! Thanks for shopping with us!";
+        model.addAttribute("success", success);
+
+        return "checkout";
+    }
+
     
 }

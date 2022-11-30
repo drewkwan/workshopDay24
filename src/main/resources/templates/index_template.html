@@ -51,5 +51,31 @@
             </table>
             <button type="submit">Submit</button>
         </form>
+
+        <h2>Contents</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-th-each="item:${items}">
+                    <td><span data-th-text="${item.itemName}"></span></td>
+                    <td><span data-th-text="${item.quantity}"></span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        <form action="/order/checkout" method="post">
+                            <button type="submit">Checkout</button>
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        
     </body>
 </html>

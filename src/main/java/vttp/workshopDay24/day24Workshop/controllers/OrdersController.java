@@ -52,12 +52,18 @@ public class OrdersController {
         //put in the queries
         orderSvc.createOrder(po);
 
-        model.addAttribute("purchaseOrder", po);
+        if (!orderSvc.createOrder(po)) {
+            String error = "Order couldn't be created :(";
+            model.addAttribute("error", error);
+        } else{
+            String success="Order was created successfully!";
+            model.addAttribute("success", success);
+            model.addAttribute("purchaseOrder", po);
+        }
+
+    
 
         return "/add";
-        
-
-
         
         
     }

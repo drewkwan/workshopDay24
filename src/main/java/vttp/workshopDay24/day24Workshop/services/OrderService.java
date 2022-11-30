@@ -14,18 +14,19 @@ public class OrderService {
     @Autowired
     private OrdersRepository ordersRepo;
 
-    public void createOrder(PurchaseOrder po) {
+    public boolean createOrder(PurchaseOrder po) {
         String orderId = UUID.randomUUID().toString().substring(0, 8);
 
         po.setId(orderId);
         System.out.println("ORDER ID >>>>>>>> " + orderId);
 
         //create the order
-        ordersRepo.createPurchaseOrder(po);
+        int count = ordersRepo.createPurchaseOrder(po);
 
         //create the associated items
         ordersRepo.createOrderDetails(po.getItems(), orderId);
 
+        return count>0;
     }
     
 }

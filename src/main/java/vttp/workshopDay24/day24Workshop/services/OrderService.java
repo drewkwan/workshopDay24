@@ -28,7 +28,7 @@ public class OrderService {
         int count = ordersRepo.createPurchaseOrder(po);
 
         if (count == 0){
-            throw new OrderException("Exception for irderId %s\n".formatted(orderId));
+            throw new OrderException("Exception for orderId %s\n".formatted(orderId));
 
         }
 

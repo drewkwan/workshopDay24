@@ -13,24 +13,24 @@
         <form action="/order" method="post">
             <table>
                 <tr>
-                    <td>Name: </td>
-                    <td><input type="text" name="customerName" required></td>
+                    <td>Name: <span data-th-text="${po.customerName}"></span></td>
+                    <td><input type="hidden" name="customerName" th:value="${po.customerName}"></td>
                 </tr>
                 <tr>
-                    <td>Address: </td>
-                    <td><input type="text" name="address" required></td>
+                    <td>Address: <span data-th-text="${po.shipAddress}"></span></td>
+                    <td><input type="hidden" name="address" th:value="${po.shipAddress}"></td>
                 </tr>
                 <tr>
-                    <td>Notes: </td>
-                    <td><input type="text" name="notes" value="Nil"></td>
+                    <td>Notes: <span data-th-text="${po.notes}"></span></td>
+                    <td><input type="hidden" name="notes" th:value="Nil" ></td>
                 </tr>
                 <tr>
-                    <td>Tax: </td>
-                    <td><input type="number" name="tax" value="0"></td>
+                    <td>Tax: <span data-th-text="${po.tax}"></span></td>
+                    <td><input type="hidden" name="tax" th:value="0"></td>
                 </tr>
                 <tr>
-                    <td>Order Date: </td>
-                    <td><input type="date" name="date" required></td>
+                    <td>Order Date: <span data-th-text="${po.orderDate}"></span></td>
+                    <td><input type="hidden" name="date" th:value="${po.orderDate}"></td>
                 </tr>
                 <tr>
                     <td>Order Item: </td>

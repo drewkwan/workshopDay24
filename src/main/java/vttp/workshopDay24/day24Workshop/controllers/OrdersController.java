@@ -48,8 +48,9 @@ public class OrdersController {
         po.setShipAddress(form.getFirst("address"));
         po.setNotes(form.getFirst("notes"));
         po.setTax(Float.parseFloat(form.getFirst("tax")));
-        po.setOrderDate(formatter.parse(form.getFirst("date")));
-        
+        // po.setOrderDate(formatter.parse(form.getFirst("date")));
+        po.setOrderDate(form.getFirst("date")); 
+
         String itemName = form.getFirst("itemName");
         Float price = Float.parseFloat(form.getFirst("itemPrice"));
         Float discount = Float.parseFloat(form.getFirst("discount"));
@@ -58,15 +59,14 @@ public class OrdersController {
 
         po.setItems(items);
 
+        session.setAttribute("po", po);
 
-        //put in the queries
-        orderSvc.createOrder(po);
+
+        // //put in the queries
+        // orderSvc.createOrder(po);
 
         model.addAttribute("items", items);
-        model.addAttribute("purchaseOrder", po);
-        
-
-    
+        model.addAttribute("po", po);
 
         return "index_template";
         
@@ -74,9 +74,11 @@ public class OrdersController {
     }
 
     @PostMapping(path="/checkout")
-    public String postCheckout(Model model, HttpSession session) {
+    public String postCheckout(Model model, HttpSession session) throws OrderException {
         List<Item> items = (List<Item>) session.getAttribute("order");
-
+        PurchaseOrder po= (PurchaseOrder) session.getAttribute("po");
+        //put the query in for checkout? Check with chuk again how and when to use the svc to checkout.
+        orderSvc.createOrder(po);
         session.invalidate();
         String success="Checkout was successful! Thanks for shopping with us!";
         model.addAttribute("success", success);

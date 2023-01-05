@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PurchaseOrder {
     private String id;
-    private Date orderDate;
+    private String orderDate;
     private String customerName;
     private String shipAddress;
     private String notes;
@@ -28,10 +28,10 @@ public class PurchaseOrder {
     public void setId(String id) {
         this.id = id;
     }
-    public Date getOrderDate() {
+    public String getOrderDate() {
         return orderDate;
     }
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
     public String getCustomerName() {
